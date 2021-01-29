@@ -54,7 +54,7 @@ export default {
         get_data () {
             let platform = this.$route.params.platform
             let username = this.$route.params.username
-            fetch(`http://localhost:3000/api/v1/apexlegends/profiles/${platform}/${username}`)
+            fetch(`https://game-tracker-rails-fd3eq.ondigitalocean.app/v1/apexlegends/profiles/${platform}/${username}`)
             .then( (response) => {
                 return response.json()
             })

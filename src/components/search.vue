@@ -35,11 +35,14 @@
             </div>
             <div class="search_term" v-if="search_term">
                 1 Result
+
+                {{ filteredPlayers }}
+                {{ players }}
             </div>
 
             <!-- <hr> -->
 
-            <div class="profile" v-if="search_result.legend" v-on:click="show_profile()">
+            <!-- <div class="profile" v-if="search_result.legend" v-on:click="show_profile()">
                 <div class="row">
                     <div class="col-md-2">
                         <div class="avatar_spot" :style="{ backgroundImage: 'url(' + search_result.img_assets.avatar + ')' }" ></div>
@@ -58,21 +61,21 @@
                     
                 </div>
                 
-            </div>
+            </div> -->
 
             <div class="search_result">
-                <div class="result" v-for="result in search_result" v-bind:key="result.username">
-                    {{ result.username }}
-                    {{ result.platform }}
-                    link: {{ "/player/" + result.platform + "/" + result.username}}
+                <div class="result" v-for="player in players" v-bind:key="player.identifier">
+                    {{ player.username }}
+                    {{ player.platform }}
+                    link: {{ "/player/" + player.platform + "/" + player.username}}
 
-                    <div class="legends">
+                    <!-- <div class="legends">
                         <ul class="legend" v-for="legend in result.stats" v-bind:key="legend.name">
                             <li>
                                 {{ legend.legend }}
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
 
                 </div>
             </div>
@@ -95,10 +98,15 @@ export default {
                 pc: false,
                 xbox: false,
                 psn: false,
-                cached_styles: {}
+                cached_styles: {},
             },
-            search_result: {}
+            search_result: {},
+            players: []
         }
+    },
+    created () {
+        console.log("READY TO SEARCH")
+        this.get_data()
     },
     computed: {
         platform () {
@@ -112,16 +120,24 @@ export default {
             } else {
                 return ""
             }
+        },
+
+        filteredPlayers() {
+            return this.players.filter(player => {
+                let term = `${this.search_term.toLowerCase()}|${this.platform.toLowerCase()}`
+                console.log(term)
+                return player.identifier.toLowerCase().includes(term)
+            })
         }
     },
     methods: {
         get_data () {
-            fetch(`http://localhost:3000/api/v1/apexlegends/profiles/search/${this.platform}/${this.search_term}`)
+            fetch(`https://game-tracker-rails-fd3eq.ondigitalocean.app/v1/games/apexlegends/players`)
             .then( (response) => {
                 return response.json()
             })
             .then( (response) => {
-                this.search_result = response['search_result']
+                this.players = response
                 console.log(response)
             })
         },
@@ -162,7 +178,7 @@ export default {
 
 .labels {
     /* background: green; */
-    width: 120px;
+    width: 128px;
     position: absolute;
     margin-top: -44px;
     padding: 4px;
