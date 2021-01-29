@@ -1,37 +1,39 @@
 <template>
-  <div class="page" v-if="profile.profile">
-    <div class="banner_full_bg" :style="{ backgroundImage: 'url(' + profile.profile.avatar_url + ')' }">
+  <div class="page" v-if="profile">
+    <div class="banner_full_bg" :style="{ backgroundImage: 'url(' + profile + ')' }">
     </div>
     <div class="info_box">
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <div class="avatar_placeholder" :style="{ backgroundImage: 'url(' + profile.profile.avatar_url + ')' }"></div>
+                    <div class="avatar_placeholder" :style="{ backgroundImage: 'url(' + profile + ')' }"></div>
                     <h1 class="profile_username">
-                        {{ profile.profile.username }}
+                        {{ profile.player.username }}
                     </h1>
                     <span class="badge badge-round-pill bg-primary">
-                        {{ profile.profile.platform }}
+                        {{ profile.player.platform }}
                     </span>
                 </div>
                 <div class="col txt-left">
-                    world
+                    ...
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="legends">
+    <div class="legends container">
         Legends
+        <hr>
 
-        <div class="legend" v-for="legend in profile.profile.legends_played" 
-        v-bind:key="legend.name"
+        <div class="legend" v-for="legend in profile.stats" 
+        v-bind:key="legend.legendName"
         >
-            <div v-if="legend.stats.length > 0">
-                {{ legend.name }}
-                <div class="legend_stats" v-for="stat in legend.stats" v-bind:key="stat.identifier">
+            <div v-if="legend.stat.length > 0" class="container">
+                <h3>{{ legend.legendName }}</h3>
+                <div class="legend_stats" v-for="stat in legend.stat" v-bind:key="stat.identifier">
                     {{stat.displayName }}
                     {{ stat.displayValue }}
+                    <hr>
                 </div>
             </div>
         </div>
@@ -52,9 +54,7 @@ export default {
     },
     methods: {
         get_data () {
-            let platform = this.$route.params.platform
-            let username = this.$route.params.username
-            fetch(`https://game-tracker-rails-fd3eq.ondigitalocean.app/v1/apexlegends/profiles/${platform}/${username}`)
+            fetch(`https://game-tracker-rails-fd3eq.ondigitalocean.app/v1/games/apexlegends/search/${this.$route.params.platform}/${this.$route.params.username}`)
             .then( (response) => {
                 return response.json()
             })

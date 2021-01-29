@@ -67,7 +67,7 @@
                 <div class="result" v-for="player in players" v-bind:key="player.identifier">
                     {{ player.username }}
                     {{ player.platform }}
-                    link: {{ "/player/" + player.platform + "/" + player.username}}
+                    <button class="btn btn-primary" @click="redirect_to(`/player/${player.platform}/${player.username}`)">Show!</button>
 
                     <!-- <div class="legends">
                         <ul class="legend" v-for="legend in result.stats" v-bind:key="legend.name">
@@ -149,6 +149,10 @@ export default {
         },
         set_psn () {
             this.icons_styling = { pc: false, xbox: false, psn: true }
+        },
+        redirect_to (url) {
+            console.log(url)
+            this.$router.push(url)
         }
     }
 }
