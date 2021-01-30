@@ -36,47 +36,39 @@
             <div class="search_term" v-if="search_term">
                 1 Result
 
-                {{ filteredPlayers }}
-                {{ players }}
+                {{ filteredPlayers.sort((a, b) => (a.similarity > b.similarity) ? 0.1 : -1) }}
+                <!-- {{ players }} -->
             </div>
 
-            <!-- <hr> -->
-
-            <!-- <div class="profile" v-if="search_result.legend" v-on:click="show_profile()">
-                <div class="row">
-                    <div class="col-md-2">
-                        <div class="avatar_spot" :style="{ backgroundImage: 'url(' + search_result.img_assets.avatar + ')' }" ></div>
-                    </div>
-                
-                    <div class="information col">
-                        <h3>{{ search_result.legend }}</h3>
-                        <div class="row">
-                            <div class="col stats" v-for="item in search_result.stats" v-bind:key="item.key">
-                                <strong>{{ item.name }}</strong>
-                                <h4>{{ item.value }}</h4>
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                </div>
-                
-            </div> -->
-
             <div class="search_result">
-                <div class="result" v-for="player in players" v-bind:key="player.identifier">
-                    {{ player.username }}
-                    {{ player.platform }}
-                    <button class="btn btn-primary" @click="redirect_to(`/player/${player.platform}/${player.username}`)">Show!</button>
+                <div class="result bg-dark-card" v-for="player in filteredPlayers.sort((a, b) => (a.similarity > b.similarity) ? 0.1 : -1)" v-bind:key="player.identifier">
+                    <div class=""
+                        @click="redirect_to(`/player/${player.platform}/${player.username}`)">
+                        <!-- <span>{{ player.similarity }}</span> -->
 
-                    <!-- <div class="legends">
-                        <ul class="legend" v-for="legend in result.stats" v-bind:key="legend.name">
-                            <li>
-                                {{ legend.legend }}
-                            </li>
-                        </ul>
-                    </div> -->
+                        <label for="search_input" class="search-icon icon-pc" v-if="player.platform =='pc'">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+                                <path d="M0 2v20h32v-20h-32zM30 20h-28v-16h28v16zM21 24h-10l-1 4-2 2h16l-2-2z"></path>
+                            </svg>
+                        </label>
+                        
 
+                        <label for="search_input" class="search-icon icon-xbox" v-if="player.platform =='xbox'"> 
+                            <svg viewBox="0 0 88 88" class="icon platform-icon platform-xbl" fill="currentColor">
+                                <path d="M39.73 86.91c-6.628-.635-13.338-3.015-19.102-6.776-4.83-3.15-5.92-4.447-5.92-7.032 0-5.193 5.71-14.29 15.48-24.658 5.547-5.89 13.275-12.79 14.11-12.604 1.626.363 14.616 13.034 19.48 19 7.69 9.43 11.224 17.154 9.428 20.597-1.365 2.617-9.837 7.733-16.06 9.698-5.13 1.62-11.867 2.306-17.416 1.775zM8.184 67.703c-4.014-6.158-6.042-12.22-7.02-20.988-.324-2.895-.21-4.55.733-10.494 1.173-7.4 5.39-15.97 10.46-21.24 2.158-2.24 2.35-2.3 4.982-1.41 3.19 1.08 6.6 3.436 11.89 8.22l3.09 2.794-1.69 2.07c-7.828 9.61-16.09 23.24-19.2 31.67-1.69 4.58-2.37 9.18-1.64 11.095.49 1.294.04.812-1.61-1.714zm70.453 1.047c.397-1.936-.105-5.49-1.28-9.076-2.545-7.765-11.054-22.21-18.867-32.032l-2.46-3.092 2.662-2.443c3.474-3.19 5.886-5.1 8.49-6.723 2.053-1.28 4.988-2.413 6.25-2.413.777 0 3.516 2.85 5.726 5.95 3.424 4.8 5.942 10.63 7.218 16.69.825 3.92.894 12.3.133 16.21-.63 3.208-1.95 7.366-3.23 10.187-.97 2.113-3.36 6.218-4.41 7.554-.54.687-.54.686-.24-.796zM40.44 11.505C36.834 9.675 31.272 7.71 28.2 7.18c-1.076-.185-2.913-.29-4.08-.23-2.536.128-2.423-.004 1.643-1.925 3.38-1.597 6.2-2.536 10.03-3.34C40.098.78 48.193.77 52.43 1.663c4.575.965 9.964 2.97 13 4.84l.904.554-2.07-.104C60.148 6.745 54.15 8.408 47.71 11.54c-1.942.946-3.63 1.7-3.754 1.68-.123-.024-1.706-.795-3.52-1.715z" data-v-6f682075=""></path>
+                            </svg>
+                        </label>
+
+                        <label for="search_input" class="search-icon icon-psn" v-if="player.platform =='psn'">
+                            <svg viewBox="5 117.952 990 764.096" class="icon platform-icon platform-psn" fill="currentColor">
+                                <path d="M986.195 702.762c-19.338 24.398-66.718 41.803-66.718 41.803l-352.455 126.6V777.8l259.383-92.42c29.436-10.546 33.955-25.455 10.029-33.28-23.881-7.848-67.122-5.6-96.58 4.992l-172.832 60.871v-96.895l9.962-3.373s49.942-17.675 120.168-25.455c70.226-7.735 156.215 1.057 223.72 26.646 76.072 24.039 84.64 59.478 65.323 83.876zM600.572 543.781V305.019c0-28.041-5.172-53.855-31.481-61.164-20.147-6.454-32.65 12.255-32.65 40.273v597.919l-161.251-51.18V117.952c68.562 12.728 168.447 42.814 222.145 60.917 136.562 46.884 182.861 105.237 182.861 236.716-.001 128.151-79.108 176.723-179.624 128.196zM79.31 768.041c-78.096-21.992-91.093-67.82-55.497-94.22 32.898-24.375 88.845-42.725 88.845-42.725l231.208-82.211v93.725l-166.378 59.544c-29.39 10.547-33.91 25.478-10.029 33.303 23.903 7.826 67.167 5.6 96.603-4.969l79.805-28.963v83.853c-5.06.899-10.703 1.799-15.921 2.676-79.829 13.042-164.851 7.6-248.636-20.013z" data-v-6f682075=""></path>
+                            </svg>
+                        </label>
+
+                        <label class="platform badge bg-primary">{{ player.platform }}</label>
+                        <h4 class="result_title">{{ player.username }}</h4>
+                    </div>
+                    
                 </div>
             </div>
 
@@ -89,6 +81,8 @@
 </div>
 </template>
 <script>
+import stringSimilarity from "string-similarity"
+
 export default {
     name: 'Search',
     data ()  {
@@ -126,11 +120,13 @@ export default {
             return this.players.filter(player => {
                 let term = `${this.search_term.toLowerCase()}|${this.platform.toLowerCase()}`
                 console.log(term)
+                player.similarity = stringSimilarity.compareTwoStrings(term, player.identifier)
                 return player.identifier.toLowerCase().includes(term)
             })
         }
     },
     methods: {
+
         get_data () {
             fetch(`https://game-tracker-rails-fd3eq.ondigitalocean.app/v1/games/apexlegends/players`)
             .then( (response) => {
@@ -141,15 +137,19 @@ export default {
                 console.log(response)
             })
         },
+
         set_pc () {
             this.icons_styling = { pc: true, xbox: false, psn: false }
         },
+
         set_xbox () {
             this.icons_styling = { pc: false, xbox: true, psn: false }
         },
+
         set_psn () {
             this.icons_styling = { pc: false, xbox: false, psn: true }
         },
+
         redirect_to (url) {
             console.log(url)
             this.$router.push(url)
@@ -262,6 +262,40 @@ export default {
     background: #303038;
     border-radius: 4px;
     margin: 4px;
+}
+
+
+/* 
+    search results
+*/
+
+.result {
+    width: 19%;
+    display: inline-block;
+    margin: 4px;
+    margin-top: 10px;
+    word-break: break-word;
+    vertical-align: top;
+    padding: 13px;
+    height: 120px;
+    cursor: pointer;
+    border-left: 2px solid #ff6b7a;
+}
+
+.bg-dark-card {
+    background: #272730;
+}
+
+.bg-dark-card:hover {
+    background: #303038
+}
+
+
+.result_title {
+    padding: 0;
+    margin: 0;
+    margin-top: 14px;
+    font-size: 1.5rem;
 }
 
 

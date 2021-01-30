@@ -43,7 +43,7 @@
 </template>
 <script>
 export default {
-    name: 'Search',
+    name: 'Profile',
     data ()  {
         return {
             profile: {}
